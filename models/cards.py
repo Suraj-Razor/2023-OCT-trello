@@ -7,7 +7,7 @@ class Card(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     description = db.Column(db.Text)
-    date = db.Column(db.Date) # Date the card was created
+    date = db.Column(db.Date) # Date the card w as created
     status = db.Column(db.String)
     priority = db.Column(db.String)
 
@@ -26,9 +26,7 @@ class Card(db.Model):
     # }
 
 class CardSchema(ma.Schema):
-
     user = fields.Nested('UserSchema', only = ['name', 'email'])
-
     class Meta:
         fields = ('id', 'title', 'description', 'date', 'status', 'priority', 'user')
 
