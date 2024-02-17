@@ -1,39 +1,42 @@
+from datetime import date
+
 from flask import Blueprint
+
 from init import db, bcrypt
 from models.user import User
 from models.cards import Card
-from datetime import date
+from models.comment import Comment
 
-db_commands = Blueprint("db", __name__)
+db_commands = Blueprint('db', __name__)
 
-@db_commands.cli.command("create")
+@db_commands.cli.command('create')
 def create_tables():
-  db.create_all()
-  print("Tables Created")
+    db.create_all()
+    print("Tables created")
 
-@db_commands.cli.command("drop")
+@db_commands.cli.command('drop')
 def drop_tables():
-  db.drop_all()
-  print("Tables Dropped")
+    db.drop_all()
+    print("Tables dropped")
 
-@db_commands.cli.command("seed")
+@db_commands.cli.command('seed')
 def seed_tables():
-  users = [
-    User(
-      email = "user1",
-      password = bcrypt.generate_password_hash("123456").decode("utf-8"),
-      is_admin = True
-    ),
-    User(
-      name = "User1",
-      email = "user1@email.com",
-      password = bcrypt.generate_password_hash("123456").decode("utf-8")
-    )
-  ]
-  
-  db.session.add_all(users)
-  
-  cards = [
+    users = [
+        User(
+            email="admin@email.com",
+            password=bcrypt.generate_password_hash('123456').decode('utf-8'),
+            is_admin=True
+        ),
+        User(
+            name="User 1",
+            email="user1@email.com",
+            password=bcrypt.generate_password_hash('123456').decode('utf-8')
+        )
+    ]
+    
+    db.session.add_all(users)
+
+    cards = [
         Card(
             title="Card 1",
             description="Card 1 desc",
@@ -67,6 +70,34 @@ def seed_tables():
             user=users[1]
         ),
     ]
-  db.session.add_all(cards)
-  db.session.commit()
-  print("Tables Seeded")
+
+    db.session.add_all(cards)
+
+    comments = [
+        Comment(
+            message="Comment 1",
+            user=users[0],
+            card=cards[0]
+        ),
+        Comment(
+            message="Comment 2",
+            user=users[0],
+            card=cards[2]
+        ),
+        Comment(
+            message="Comment 3",
+            user=users[1],
+            card=cards[3]
+        ),
+        Comment(
+            message="Comment 4",
+            user=users[1],
+            card=cards[2]
+        )
+    ]
+
+    db.session.add_all(comments)
+
+    db.session.commit()
+
+    print("Tables seeded")
